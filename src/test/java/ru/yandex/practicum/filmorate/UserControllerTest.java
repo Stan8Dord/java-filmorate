@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerTest {
     private final UserController userController = new UserController();
@@ -30,6 +30,7 @@ public class UserControllerTest {
             text = e.getMessage();
         }
         assertEquals("Некорректные данные нового пользователя!", text);
+        assertThrows(ValidationException.class, () -> userController.createUser(dummyUser));
     }
 
     @Test
@@ -45,6 +46,7 @@ public class UserControllerTest {
         }
         assertEquals("", text);
         assertEquals(userController.getAllUsers().size(), 1);
+        assertDoesNotThrow(() -> userController.createUser(dummyUser));
     }
 
     @Test
@@ -53,7 +55,7 @@ public class UserControllerTest {
 
         userController.createUser(dummyUser);
 
-        assertTrue(userController.getAllUsers().get(0).getName() == dummyUser.getLogin());
+        assertTrue(userController.getAllUsers().stream().findFirst().get().getName() == dummyUser.getLogin());
     }
 
 }

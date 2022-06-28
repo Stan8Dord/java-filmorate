@@ -8,7 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data @AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class User {
     private int id;
     @NotNull @Email

@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
     private final FilmController filmController = new FilmController();
@@ -30,6 +30,7 @@ public class FilmControllerTest {
             text = e.getMessage();
         }
         assertEquals("Некорректные данные фильма!", text);
+        assertThrows(RuntimeException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -45,6 +46,7 @@ public class FilmControllerTest {
         }
         assertEquals("нет ошибки", text);
         assertEquals(filmController.getAllFilms().size(), 1);
+        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -59,6 +61,7 @@ public class FilmControllerTest {
         }
 
         assertEquals(text, "Некорректные данные фильма!");
+        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -73,6 +76,7 @@ public class FilmControllerTest {
         }
 
         assertEquals(text, "Некорректные данные фильма!");
+        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -89,6 +93,7 @@ public class FilmControllerTest {
         }
 
         assertTrue(text.equals("Некорректные данные фильма!"));
+        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -107,5 +112,6 @@ public class FilmControllerTest {
         assertEquals(dummyFilm.getDescription().length(), 200);
         assertTrue(text.equals("ошибки нет"));
         assertEquals(filmController.getAllFilms().size(), 1);
+        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 }

@@ -8,10 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class FilmController {
@@ -47,25 +44,19 @@ public class FilmController {
     }
 
     @GetMapping("/films")
-    public List<Film> getAllFilms() {
-        List<Film> filmList = new ArrayList<>();
-
-        if (!films.isEmpty()) {
-            for (Film film : films.values()) {
-                filmList.add(film);
-            }
-        }
-        System.out.println("Проверка get: " + filmList);
-
-        return filmList;
+    public Collection<Film> getAllFilms() {
+        if (!films.isEmpty())
+            return films.values();
+        else
+            return null;
     }
 
     private Boolean validate(Film film) {
-        Boolean isUncorrect = film.getReleaseDate().isBefore(CINEMA_BIRTHDAY) || film.getDuration() <= 0;
+        Boolean isCorrect = !film.getReleaseDate().isBefore(CINEMA_BIRTHDAY) && film.getDuration() > 0;
         if (film.getDescription() != null)
-            if (!isUncorrect)
-                isUncorrect = film.getDescription().length() > 200;
+            if (isCorrect)
+                isCorrect = film.getDescription().length() <= 200;
 
-        return !isUncorrect;
+        return isCorrect;
     }
 }

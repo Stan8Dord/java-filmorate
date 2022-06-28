@@ -7,14 +7,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data @AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class Film {
     private int id;
-    @NotNull @NotBlank
+    @NotBlank
     private final String name;
     private String description;
     @NotNull
     private LocalDate releaseDate;
-    @NotNull
     private long duration;
 }

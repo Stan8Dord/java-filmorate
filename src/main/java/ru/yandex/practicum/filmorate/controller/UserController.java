@@ -8,10 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -26,7 +23,7 @@ public class UserController {
 
         if (user.getName() == null || user.getName().equals(""))
             user.setName(user.getLogin());
-        if (user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now()) || user.getLogin().contains(" ")) {
             log.error("не пройдена валидация данных нового пользователя \n" + user);
             throw new ValidationException("Некорректные данные нового пользователя!");
         } else {
@@ -50,14 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<>();
-
-        for (User user : users.values()) {
-            userList.add(user);
-        }
-        System.out.println("Проверка get: " + userList);
-
-        return userList;
+    public Collection<User> getAllUsers() {
+        if (!users.isEmpty())
+            return users.values();
+        else
+            return null;
     }
 }
