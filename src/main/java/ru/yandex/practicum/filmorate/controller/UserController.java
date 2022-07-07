@@ -2,9 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -12,10 +16,15 @@ import java.util.*;
 
 @RestController
 public class UserController {
-
+    private final UserStorage storage;
+    private final UserService service;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private static int lastId = 1;
-    private final Map<Integer, User> users = new HashMap<>();
+
+    @Autowired
+    public UserController(UserStorage storage, UserService service) {
+        this.storage = storage;
+        this.service = service;
+    }
 
     @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) {
@@ -27,8 +36,7 @@ public class UserController {
             log.error("не пройдена валидация данных нового пользователя \n" + user);
             throw new ValidationException("Некорректные данные нового пользователя!");
         } else {
-            user.setId(lastId);
-            users.put(lastId++, user);
+            storage.createUser(user);
         }
 
         return user;
@@ -38,19 +46,42 @@ public class UserController {
     public User updateUser(@Valid @RequestBody User user) {
         log.info("put: \n" + user);
 
-        if (users.keySet().contains(user.getId()))
-            users.put(user.getId(), user);
-        else
-            throw new ValidationException("Некорректные данные!");
-
-        return user;
+        return storage.updateUser(user);
     }
 
     @GetMapping("/users")
     public Collection<User> getAllUsers() {
-        if (!users.isEmpty())
-            return users.values();
-        else
-            return null;
+        return storage.getAllUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") Long userId) {
+        Optional<User> userOptional = storage.getUserById(userId);
+
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("Нет такого пользователя: id = " + userId);
+        }
+
+        return userOptional.get();
+    }
+
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        service.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        service.removeFriend(userId, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public Collection<User> getUserFriends(@PathVariable("id") Long userId) {
+        return service.getUserFriends(userId);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable("id") Long userId, @PathVariable("otherId") Long otherId) {
+        return service.getCommonFriends(userId, otherId);
     }
 }
