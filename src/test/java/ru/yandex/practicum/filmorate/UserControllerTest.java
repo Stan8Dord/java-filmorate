@@ -20,7 +20,7 @@ public class UserControllerTest {
     @BeforeAll
     public static void beforeAll() {
         InMemoryUserStorage storage = new InMemoryUserStorage();
-        userController = new UserController(storage, new UserService(storage));
+        userController = new UserController(new UserService(storage));
     }
 
     @BeforeEach

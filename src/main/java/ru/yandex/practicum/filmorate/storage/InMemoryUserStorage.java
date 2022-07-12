@@ -1,14 +1,11 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -24,30 +21,19 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> getAllUsers() {
-        return users.values();
+    public List<User> getAllUsers() {
+        return List.copyOf(users.values());
     }
 
     @Override
     public User updateUser(User user) {
-        Long id = user.getId();
-        if (id < 0) {
-            throw new UserNotFoundException("Нет такого пользователя id = " + id);
-        }
-        if (users.keySet().contains(id))
-            users.put(id, user);
-        else
-            throw new ValidationException("Некорректные данные!");
+        users.put(user.getId(), user);
 
         return user;
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        if (users.containsKey(id)) {
-            return Optional.of(users.get(id));
-        }
-
-        return Optional.empty();
+    public User getUserById(Long id) {
+        return users.get(id);
     }
 }

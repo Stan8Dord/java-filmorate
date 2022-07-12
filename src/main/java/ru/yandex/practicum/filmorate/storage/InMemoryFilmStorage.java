@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -20,8 +19,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> getAllFilms() {
-        return films.values();
+    public List<Film> getAllFilms() {
+        return List.copyOf(films.values());
     }
 
     @Override
@@ -32,11 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getFilmById(Long id) {
-        if (films.containsKey(id)) {
-            return Optional.of(films.get(id));
-        }
-
-        return Optional.empty();
+    public Film getFilmById(Long id) {
+        return films.get(id);
     }
 }
