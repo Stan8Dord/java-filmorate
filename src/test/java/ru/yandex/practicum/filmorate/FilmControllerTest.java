@@ -1,22 +1,34 @@
 package ru.yandex.practicum.filmorate;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
-    private final FilmController filmController = new FilmController();
+    private static FilmController filmController;
     Film dummyFilm;
+
+    @BeforeAll
+    public static void beforeAll() {
+        UserService userService = new UserService(new InMemoryUserStorage());
+        FilmService filmService = new FilmService(new InMemoryFilmStorage(), userService);
+        filmController = new FilmController(filmService);
+    }
 
     @BeforeEach
     public void beforeEach() {
-        dummyFilm = new Film(1, "SuperFilm", "Hit", LocalDate.of(2000, 1, 1), 100);
+        dummyFilm = new Film("SuperFilm", "Hit", LocalDate.of(2000, 1, 1), 100);
     }
 
     @Test
@@ -36,7 +48,6 @@ public class FilmControllerTest {
     @Test
     public void shouldValidateWithCinemaBirthday() {
         String text = "нет ошибки";
-        LocalDate now = LocalDate.now();
         dummyFilm.setReleaseDate(FilmController.CINEMA_BIRTHDAY);
 
         try {
@@ -46,7 +57,6 @@ public class FilmControllerTest {
         }
         assertEquals("нет ошибки", text);
         assertEquals(filmController.getAllFilms().size(), 1);
-        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
     }
 
     @Test
@@ -111,7 +121,6 @@ public class FilmControllerTest {
 
         assertEquals(dummyFilm.getDescription().length(), 200);
         assertTrue(text.equals("ошибки нет"));
-        assertEquals(filmController.getAllFilms().size(), 1);
-        assertThrows(ValidationException.class, () -> filmController.createFilm(dummyFilm));
+        assertDoesNotThrow(() -> filmController.createFilm(dummyFilm));
     }
 }
