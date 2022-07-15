@@ -14,13 +14,14 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class User {
-    private Long id;
+    private long id;
     @NotNull @Email
     private final String email;
     @NotNull @NotBlank
     private String login;
     private String name;
     private LocalDate birthday;
+    //private Map<Long, Integer> friends = new HashMap<>();
     private Set<Long> friends = new HashSet<>();
 
     public User(@JsonProperty("email") String email, @JsonProperty("login") String login,

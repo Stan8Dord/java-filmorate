@@ -13,17 +13,20 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class Film {
-    private Long id;
+    private long id;
     @NotBlank
     private final String name;
     private String description;
     @NotNull
     private LocalDate releaseDate;
     private long duration;
+    private int mpaRating;
     private Set<Long> likes = new HashSet<>();
+    private Set<Integer> genres = new HashSet<>();
 
     public Film(@JsonProperty("name") String name, @JsonProperty("description") String description,
-                @JsonProperty("releaseDate") LocalDate releaseDate, @JsonProperty("duration") long duration) {
+                @JsonProperty("releaseDate") LocalDate releaseDate, @JsonProperty("duration") long duration,
+                @JsonProperty("mpaRating") String mpaRating) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
