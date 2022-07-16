@@ -23,25 +23,25 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        getUserById(userId);
         getUserById(friendId);
+        getUserById(userId);
 
-        User user = storage.getUserById(userId);
-        User friend = storage.getUserById(friendId);
+        //User user = storage.getUserById(userId);
+        //user.addFriend(friendId);
 
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        storage.addFriend(userId, friendId);
     }
 
     public void removeFriend(Long userId, Long friendId) {
         getUserById(userId);
         getUserById(friendId);
 
-        User user = storage.getUserById(userId);
-        User friend = storage.getUserById(friendId);
+        //User user = storage.getUserById(userId);
+        //User friend = storage.getUserById(friendId);
+        //user.getFriends().remove(friendId);
+        //friend.getFriends().remove(userId);
 
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        storage.removeFriend(userId, friendId);
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
@@ -50,25 +50,30 @@ public class UserService {
         getUserById(userId);
         getUserById(otherId);
 
-        Set<Long> userFriends = storage.getUserById(userId).getFriends();
-        Set<Long> otherFriends = storage.getUserById(otherId).getFriends();
+        //Set<Long> userFriends = storage.getUserById(userId).getFriends();
+        //Set<Long> otherFriends = storage.getUserById(otherId).getFriends();
+        //for (Long friend : userFriends) {
+        //    if (otherFriends.contains(friend))
+        //        friends.add(storage.getUserById(friend));
+        //}
 
-        for (Long friend : userFriends) {
-            if (otherFriends.contains(friend))
-                friends.add(storage.getUserById(friend));
+        for (Long id : storage.getCommonFriends(userId, otherId)) {
+            friends.add(getUserById(id));
         }
 
         return friends;
     }
 
     public List<User> getUserFriends(Long userId) {
-        getUserById(userId);
         List<User> friends = new ArrayList<>();
 
-        Set<Long> idFriends = storage.getUserById(userId).getFriends();
+        //Set<Long> idFriends = storage.getUserById(userId).getFriends();
+        //for (Long id : idFriends) {
+        //    friends.add(storage.getUserById(id));
+        //}
 
-        for (Long id : idFriends) {
-            friends.add(storage.getUserById(id));
+        for (Long id : storage.getUserFriends(userId)) {
+            friends.add(getUserById(id));
         }
 
         return friends;

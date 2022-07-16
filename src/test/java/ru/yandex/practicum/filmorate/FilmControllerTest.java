@@ -28,7 +28,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        dummyFilm = new Film("SuperFilm", "Hit", LocalDate.of(2000, 1, 1), 100, "PGE");
+        dummyFilm = new Film("SuperFilm", "Hit", LocalDate.of(2000, 1, 1), 100, 5, null, null);
     }
 
     @Test

@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,28 +27,41 @@ public class FilmService {
         userService.getUserById(userId);
         getFilmById(filmId);
 
-        Film film = filmStorage.getFilmById(filmId);
+        /*Film film = filmStorage.getFilmById(filmId);
 
-        film.getLikes().add(userId);
+        film.getLikes().add(userId);*/
+
+        filmStorage.addLike(filmId, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
         userService.getUserById(userId);
         getFilmById(filmId);
-
+/*
         Film film = filmStorage.getFilmById(filmId);
 
-        film.getLikes().remove(userId);
+        film.getLikes().remove(userId); */
+
+        filmStorage.removeLike(filmId, userId);
     }
 
     public List<Film> findPopular(Integer count) {
+        List<Film> popFilms = new ArrayList<>();
+
         if (count <= 0) {
             throw new ValidationException("Некорректное количество count = " + count);
         }
+        /*
         return filmStorage.getAllFilms().stream()
                 .sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size())
                 .limit(count)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); */
+
+        for (Long id : filmStorage.getPopularFilms(count)) {
+            popFilms.add(getFilmById(id));
+        }
+
+        return popFilms;
     }
 
     public Film createFilm(Film film) {

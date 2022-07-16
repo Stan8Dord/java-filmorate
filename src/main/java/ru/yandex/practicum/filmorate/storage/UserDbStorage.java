@@ -37,7 +37,6 @@ public class UserDbStorage implements UserStorage {
 
 
         while(userRows.next()) {
-            System.out.println("last row = " + userRows.isLast());
             long id = userRows.getLong("id");
             SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select \"friend2_id\" from \"friends\" where \"friend1_id\" = ?", id);
             Set<Long> userFriends = new HashSet<>();
@@ -57,7 +56,6 @@ public class UserDbStorage implements UserStorage {
                     userFriends
             );
 
-            System.out.println("user = " + user.toString());
             allUsers.add(user);
         }
         return allUsers;
@@ -75,13 +73,13 @@ public class UserDbStorage implements UserStorage {
                 userFriends.add(friendsRows.getLong("friend2_id"));
             }
             user = new User(
-                    id,
                     userRow.getString("email"),
                     userRow.getString("login"),
                     userRow.getString("name"),
-                    userRow.getDate("birthday").toLocalDate(),
-                    userFriends
+                    userRow.getDate("birthday").toLocalDate()
             );
+            user.setId(id);
+            user.setFriends(userFriends);
         }
 
         log.info("Найден пользователь: id = {} email = {}", id, user.getEmail());
@@ -124,5 +122,47 @@ public class UserDbStorage implements UserStorage {
                 user.getId());
 
         return user;
+    }
+
+    @Override
+    public void addFriend(Long userId, Long friendId) {
+        String sql = "insert into \"friends\"(\"friend1_id\", \"friend2_id\") " + "values (?, ?)";
+
+        jdbcTemplate.update(sql, userId, friendId);
+    }
+
+    @Override
+    public void removeFriend(Long userId, Long friendId) {
+        String sqlQuery = "delete from \"friends\" where \"friend1_id\" = ? and  \"friend2_id\" = ?";
+
+        jdbcTemplate.update(sqlQuery, userId, friendId);
+    }
+
+    @Override
+    public List<Long> getCommonFriends(Long userId, Long otherId) {
+        List<Long> commonFriends = new ArrayList<>();
+
+        SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select f.\"friend2_id\" AS \"common_friend\" " +
+                "from \"friends\" f JOIN (SELECT \"friend2_id\" FROM \"friends\" WHERE \"friend1_id\" = ?) f2 " +
+                "ON f.\"friend2_id\" = f2.\"friend2_id\" WHERE f.\"friend1_id\" = ?", userId, otherId);
+
+        while (friendsRows.next()) {
+            commonFriends.add(friendsRows.getLong("common_friend"));
+        }
+
+        return commonFriends;
+    }
+
+    public List<Long> getUserFriends(Long userId) {
+        List<Long> friends = new ArrayList<>();
+
+        SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select \"friend2_id\" from \"friends\" " +
+                " WHERE \"friend1_id\" = ?", userId);
+
+        while (friendsRows.next()) {
+            friends.add(friendsRows.getLong("friend2_id"));
+        }
+
+        return friends;
     }
 }

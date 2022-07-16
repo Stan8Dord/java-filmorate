@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS "films" (
   "description" varchar,
   "release_date" date,
   "duration" bigint,
+  "rate" int,
   "mpa_rating_id" int
 );
 
@@ -37,8 +38,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 
 CREATE TABLE IF NOT EXISTS "friends" (
   "friend1_id" bigint,
-  "friend2_id" bigint,
-  "friendship_status" smallint
+  "friend2_id" bigint
 );
 
 ALTER TABLE "films" ADD FOREIGN KEY ("mpa_rating_id") REFERENCES "mpa_ratings" ("id");

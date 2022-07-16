@@ -36,4 +36,20 @@ public class InMemoryUserStorage implements UserStorage {
     public User getUserById(Long id) {
         return users.get(id);
     }
+
+    @Override
+    public void addFriend(Long userId, Long friendId) {}
+
+    @Override
+    public void removeFriend(Long userId, Long friendId){}
+
+    @Override
+    public List<Long> getCommonFriends(Long userId, Long otherId){
+        return null;
+    }
+
+    @Override
+    public List<Long> getUserFriends(Long userId){
+        return null;
+    }
 }

@@ -31,4 +31,8 @@ public class User {
         this.name = name;
         this.birthday = birthday;
     }
+
+    public void addFriend(Long friendId) {
+        friends.add(friendId);
+    }
 }
