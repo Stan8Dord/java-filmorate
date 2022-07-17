@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,20 +25,6 @@ public class Film {
     private Set<Long> likes = new HashSet<>();
     private Set<Genre> genres = new HashSet<>();
 
-    /*
-    @JsonCreator
-    public Film(@JsonProperty("name") String name, @JsonProperty("description") String description,
-                @JsonProperty("releaseDate") LocalDate releaseDate, @JsonProperty("duration") long duration,
-                @JsonProperty("rate") int rate, @JsonProperty("mpa") MpaRating mpa) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.rate = rate;
-        this.mpa = mpa;
-    } */
-
-    @JsonCreator
     public Film(@JsonProperty("name") String name, @JsonProperty("description") String description,
                 @JsonProperty("releaseDate") LocalDate releaseDate, @JsonProperty("duration") long duration,
                 @JsonProperty("rate") int rate, @JsonProperty("mpa") MpaRating mpa,

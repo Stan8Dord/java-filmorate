@@ -7,10 +7,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Box;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -67,40 +65,12 @@ public class FilmDbStorage implements  FilmStorage {
     @Override
     public List<Film> getAllFilms() {
         List<Film> allFilms = new ArrayList<>();
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select * from \"films\"");
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("select \"id\" from \"films\"");
 
         while(filmRows.next()) {
             long id = filmRows.getLong("id");
-            SqlRowSet likesRows = jdbcTemplate.queryForRowSet("select \"user_id\" from \"likes\" " +
-                    "where \"film_id\" = ?", id);
-            Set<Long> filmLikes = new HashSet<>();
 
-            while (likesRows.next()) {
-                filmLikes.add(likesRows.getLong("user_id"));
-            }
-
-            SqlRowSet genresRows = jdbcTemplate.queryForRowSet("select \"genre_id\" from \"film_genres\" " +
-                    "where \"film_id\" = ?", id);
-            Set<Integer> filmGenres = new HashSet<>();
-
-            while (genresRows.next()) {
-                filmGenres.add(genresRows.getInt("genre_id"));
-            }
-
-            Film film  = new Film(
-                    id,
-                    filmRows.getString("name"),
-                    filmRows.getString("description"),
-                    filmRows.getDate("release_date").toLocalDate(),
-                    filmRows.getLong("duration"),
-                    filmRows.getInt("rate"),
-                    mpaStorage.getMpaById(filmRows.getInt("mpa_rating_id")),
-                    filmLikes,
-                    //filmGenres
-                    null
-            );
-
-            allFilms.add(film);
+            allFilms.add(getFilmById(id));
         }
         return allFilms;
     }

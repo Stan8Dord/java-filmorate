@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.MpaStorage;
 import java.util.List;
 
 @Service
-public class MpaService {
+public class MpaService implements MpaServiceInterface {
     @Autowired
     @Qualifier("mpaDbStorage")
     MpaStorage storage;
@@ -20,10 +20,12 @@ public class MpaService {
         this.storage = storage;
     }
 
+    @Override
     public List<MpaRating> getAllMpa() {
         return storage.getAllMpa();
     }
 
+    @Override
     public MpaRating getMpaById(int id) {
         if (storage.getAllMpa().stream().anyMatch(m -> m.getId() == id))
             return storage.getMpaById(id);

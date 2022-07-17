@@ -16,7 +16,4 @@ public class MpaRating {
         this.id = id;
         this.name = "";
     }
-    //public MpaRating(@JsonProperty("mpa_rating") String mpa_rating) {
-    //    this.name = mpa_rating;
-    //}
 }

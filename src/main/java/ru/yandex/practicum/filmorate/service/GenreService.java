@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import java.util.List;
 
 @Service
-public class GenreService {
+public class GenreService implements GenreServiceInterface {
     @Autowired
     @Qualifier("genreDbStorage")
     GenreStorage storage;
@@ -20,10 +20,12 @@ public class GenreService {
         this.storage = storage;
     }
 
+    @Override
     public List<Genre> getAllGenres() {
         return storage.getAllGenres();
     }
 
+    @Override
     public Genre getGenreById(int id) {
         if (storage.getAllGenres().stream().anyMatch(g -> g.getId() == id))
             return storage.getGenreById(id);

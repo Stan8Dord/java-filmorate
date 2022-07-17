@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -13,7 +13,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class UserService {
+@Slf4j
+public class UserService implements UserServiceInterface {
     @Autowired
     @Qualifier("dbStorage")
     UserStorage storage;
@@ -22,40 +23,28 @@ public class UserService {
         this.storage = storage;
     }
 
+    @Override
     public void addFriend(Long userId, Long friendId) {
         getUserById(friendId);
         getUserById(userId);
 
-        //User user = storage.getUserById(userId);
-        //user.addFriend(friendId);
-
         storage.addFriend(userId, friendId);
     }
 
+    @Override
     public void removeFriend(Long userId, Long friendId) {
         getUserById(userId);
         getUserById(friendId);
 
-        //User user = storage.getUserById(userId);
-        //User friend = storage.getUserById(friendId);
-        //user.getFriends().remove(friendId);
-        //friend.getFriends().remove(userId);
-
         storage.removeFriend(userId, friendId);
     }
 
+    @Override
     public List<User> getCommonFriends(Long userId, Long otherId) {
         List<User> friends = new ArrayList<>();
 
         getUserById(userId);
         getUserById(otherId);
-
-        //Set<Long> userFriends = storage.getUserById(userId).getFriends();
-        //Set<Long> otherFriends = storage.getUserById(otherId).getFriends();
-        //for (Long friend : userFriends) {
-        //    if (otherFriends.contains(friend))
-        //        friends.add(storage.getUserById(friend));
-        //}
 
         for (Long id : storage.getCommonFriends(userId, otherId)) {
             friends.add(getUserById(id));
@@ -64,13 +53,9 @@ public class UserService {
         return friends;
     }
 
+    @Override
     public List<User> getUserFriends(Long userId) {
         List<User> friends = new ArrayList<>();
-
-        //Set<Long> idFriends = storage.getUserById(userId).getFriends();
-        //for (Long id : idFriends) {
-        //    friends.add(storage.getUserById(id));
-        //}
 
         for (Long id : storage.getUserFriends(userId)) {
             friends.add(getUserById(id));
@@ -79,10 +64,12 @@ public class UserService {
         return friends;
     }
 
+    @Override
     public User createUser(User user) {
         return storage.createUser(validUser(user));
     }
 
+    @Override
     public User updateUser(User user) {
         Long id = user.getId();
         if (id < 0) {
@@ -94,10 +81,12 @@ public class UserService {
             throw new ValidationException("Некорректные данные!");
     }
 
+    @Override
     public List<User> getAllUsers() {
         return storage.getAllUsers();
     }
 
+    @Override
     public User getUserById(Long id) {
         if (storage.getAllUsers().stream().anyMatch(u -> u.getId() == id))
             return storage.getUserById(id);
@@ -105,11 +94,12 @@ public class UserService {
             throw new UserNotFoundException("Нет такого пользователя: id = " + id);
     }
 
+    @Override
     public User validUser(User user) {
         if (user.getName() == null || user.getName().isBlank())
             user.setName(user.getLogin());
         if (user.getBirthday().isAfter(LocalDate.now()) || user.getLogin().contains(" ")) {
-            UserController.log.error("не пройдена валидация данных нового пользователя \n" + user);
+            log.error("не пройдена валидация данных нового пользователя \n" + user);
             throw new ValidationException("Некорректные данные нового пользователя!");
         }
 

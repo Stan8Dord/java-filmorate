@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmServiceInterface;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.UserServiceInterface;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -21,8 +23,8 @@ public class FilmControllerTest {
 
     @BeforeAll
     public static void beforeAll() {
-        UserService userService = new UserService(new InMemoryUserStorage());
-        FilmService filmService = new FilmService(new InMemoryFilmStorage(), userService);
+        UserServiceInterface userService = new UserService(new InMemoryUserStorage());
+        FilmServiceInterface filmService = new FilmService(new InMemoryFilmStorage(), userService);
         filmController = new FilmController(filmService);
     }
 

@@ -1,24 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmServiceInterface;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 
 @RestController
+@Slf4j
 public class FilmController {
-    private final FilmService service;
-    public static final Logger log = LoggerFactory.getLogger(FilmController.class);
+    private final FilmServiceInterface service;
     public static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
 
     @Autowired
-    public FilmController(FilmService service) {
+    public FilmController(FilmServiceInterface service) {
         this.service = service;
     }
 

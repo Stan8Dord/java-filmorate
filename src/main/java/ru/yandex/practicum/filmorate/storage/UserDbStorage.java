@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,8 +19,8 @@ import java.util.Set;
 
 @Component("dbStorage")
 @Primary
+@Slf4j
 public class UserDbStorage implements UserStorage {
-    private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -32,32 +31,14 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         List<User> allUsers = new ArrayList<>();
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from \"users\"");
-
-
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select \"id\" from \"users\"");
 
         while(userRows.next()) {
             long id = userRows.getLong("id");
-            SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select \"friend2_id\" from \"friends\" where \"friend1_id\" = ?", id);
-            Set<Long> userFriends = new HashSet<>();
 
-            //System.out.println("Ch1: " + Arrays.stream(friendsRows.getMetaData().getColumnNames()).collect(Collectors.toList()));
-            //System.out.println("Ch1: " + friendsRows.getMetaData().getColumnCount());
-
-            while (friendsRows.next()) {
-                userFriends.add(friendsRows.getLong("friend2_id"));
-            }
-            User user = new User(
-                    id,
-                    userRows.getString("email"),
-                    userRows.getString("login"),
-                    userRows.getString("name"),
-                    userRows.getDate("birthday").toLocalDate(),
-                    userFriends
-            );
-
-            allUsers.add(user);
+            allUsers.add(getUserById(id));
         }
+
         return allUsers;
     }
 
@@ -67,15 +48,20 @@ public class UserDbStorage implements UserStorage {
         SqlRowSet userRow = jdbcTemplate.queryForRowSet("select * from \"users\" where \"id\" = ?", id);
 
         if (userRow.next()) {
-            SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select \"friend2_id\" from \"friends\" where \"friend1_id\" = ?", id);
             Set<Long> userFriends = new HashSet<>();
-            if (friendsRows.next()) {
+
+            SqlRowSet friendsRows = jdbcTemplate.queryForRowSet("select \"friend2_id\" from \"friends\" where \"friend1_id\" = ?", id);
+            while (friendsRows.next()) {
                 userFriends.add(friendsRows.getLong("friend2_id"));
             }
+            String name = userRow.getString("name");
+            if (name.isBlank())
+                name = userRow.getString("login");
+
             user = new User(
                     userRow.getString("email"),
                     userRow.getString("login"),
-                    userRow.getString("name"),
+                    name,
                     userRow.getDate("birthday").toLocalDate()
             );
             user.setId(id);

@@ -10,10 +10,6 @@ public class Genre {
     private int id;
     private String name;
 
-    /*public Genre(@JsonProperty("name") String name) {
-        this.name = name;
-    }*/
-
     public Genre(@JsonProperty("id") int id) {
         this.id = id;
         this.name = "";
