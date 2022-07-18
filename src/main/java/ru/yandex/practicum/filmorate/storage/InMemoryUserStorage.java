@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("imMemoryStorage")
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
     private static Long lastId = 1L;
@@ -35,5 +35,21 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User getUserById(Long id) {
         return users.get(id);
+    }
+
+    @Override
+    public void addFriend(Long userId, Long friendId) {}
+
+    @Override
+    public void removeFriend(Long userId, Long friendId){}
+
+    @Override
+    public List<Long> getCommonFriends(Long userId, Long otherId){
+        return null;
+    }
+
+    @Override
+    public List<Long> getUserFriends(Long userId){
+        return null;
     }
 }

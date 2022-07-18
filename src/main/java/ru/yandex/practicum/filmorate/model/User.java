@@ -14,12 +14,14 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class User {
-    private Long id;
+    private long id;
     @NotNull @Email
     private final String email;
-    @NotNull @NotBlank
+    @NotBlank
     private String login;
+    @NotBlank
     private String name;
+    @NotNull
     private LocalDate birthday;
     private Set<Long> friends = new HashSet<>();
 
@@ -27,7 +29,10 @@ public class User {
                 @JsonProperty("name") String name, @JsonProperty("birthday") LocalDate birthday) {
         this.email = email;
         this.login = login;
-        this.name = name;
+        if (name.isBlank())
+            this.name = login;
+        else
+            this.name = name;
         this.birthday = birthday;
     }
 }
