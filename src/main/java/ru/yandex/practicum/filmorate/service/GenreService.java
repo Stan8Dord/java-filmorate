@@ -10,8 +10,8 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import java.util.List;
 
 @Service
-public class GenreService implements GenreServiceInterface {
-    @Autowired
+public class GenreService implements IGenreService {
+
     @Qualifier("genreDbStorage")
     GenreStorage storage;
 

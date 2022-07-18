@@ -10,8 +10,7 @@ import ru.yandex.practicum.filmorate.storage.MpaStorage;
 import java.util.List;
 
 @Service
-public class MpaService implements MpaServiceInterface {
-    @Autowired
+public class MpaService implements IMpaService {
     @Qualifier("mpaDbStorage")
     MpaStorage storage;
 

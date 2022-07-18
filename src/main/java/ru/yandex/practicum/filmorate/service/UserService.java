@@ -14,11 +14,12 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class UserService implements UserServiceInterface {
-    @Autowired
+public class UserService implements IUserService {
+
     @Qualifier("dbStorage")
     UserStorage storage;
 
+    @Autowired
     public UserService(UserStorage storage) {
         this.storage = storage;
     }

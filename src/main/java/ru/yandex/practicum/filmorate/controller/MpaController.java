@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.service.MpaServiceInterface;
+import ru.yandex.practicum.filmorate.service.IMpaService;
 
 import java.util.List;
 
 @RestController
 public class MpaController {
-    private final MpaServiceInterface service;
+    private final IMpaService service;
 
     @Autowired
-    public MpaController(MpaServiceInterface service) {
+    public MpaController(IMpaService service) {
         this.service = service;
     }
 

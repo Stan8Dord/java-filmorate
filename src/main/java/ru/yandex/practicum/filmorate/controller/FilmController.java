@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmServiceInterface;
+import ru.yandex.practicum.filmorate.service.IFilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -13,11 +13,11 @@ import java.util.*;
 @RestController
 @Slf4j
 public class FilmController {
-    private final FilmServiceInterface service;
+    private final IFilmService service;
     public static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
 
     @Autowired
-    public FilmController(FilmServiceInterface service) {
+    public FilmController(IFilmService service) {
         this.service = service;
     }
 

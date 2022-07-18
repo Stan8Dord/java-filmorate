@@ -14,12 +14,12 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class FilmService implements FilmServiceInterface {
+public class FilmService implements IFilmService {
     FilmStorage filmStorage;
-    UserServiceInterface userService;
+    IUserService userService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserServiceInterface userService) {
+    public FilmService(FilmStorage filmStorage, IUserService userService) {
         this.filmStorage = filmStorage;
         this.userService = userService;
     }

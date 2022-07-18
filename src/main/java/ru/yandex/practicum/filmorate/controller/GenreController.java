@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.service.GenreServiceInterface;
+import ru.yandex.practicum.filmorate.service.IGenreService;
 
 import java.util.List;
 
 @RestController
 public class GenreController {
-    private final GenreServiceInterface service;
+    private final IGenreService service;
 
     @Autowired
-    public GenreController(GenreServiceInterface service) {
+    public GenreController(IGenreService service) {
         this.service = service;
     }
 

@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-public interface UserServiceInterface {
+public interface IUserService {
     void addFriend(Long userId, Long friendId);
 
     void removeFriend(Long userId, Long friendId);
