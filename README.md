@@ -9,7 +9,8 @@ Java, Spring Boot, H2, SQL, Maven, Lombok, JUnit
 ### Особенности
 Реализован REST API для социального сервиса - простой аналог кинопоиска, взаимодействие с БД (H2) с помощью JDBC. Написаны unit-тесты с испльзованием фреймворка JUnit.
 
-### ![Схема БД](https://github.com/Stan8Dord/java-filmorate/blob/main/DB_filmorate_v1.png)
+### Схема БД
+![Схема БД](https://github.com/Stan8Dord/java-filmorate/blob/main/DB_filmorate_v1.png)
 
 Выделены таблицы 
 users, films - основные таблицы модели  
