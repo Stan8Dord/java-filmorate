@@ -1,14 +1,22 @@
-# java-filmorate
-Template repository for Filmorate project.
+# Filmorate
+---
+## Используемые технологии
+Java, Spring Boot, H2, SQL, Maven, Lombok, JUnit
 
-![Схема БД](https://github.com/Stan8Dord/java-filmorate/blob/main/DB_filmorate_v1.png)
+## Описание
+Социальная сеть, которая поможет выбрать кино на основе рейтинга фильмов.
+
+### Особенности
+Реализован REST API для социального сервиса - простой аналог кинопоиска, взаимодействие с БД (H2) с помощью JDBC. Написаны unit-тесты с испльзованием фреймворка JUnit.
+
+### ![Схема БД](https://github.com/Stan8Dord/java-filmorate/blob/main/DB_filmorate_v1.png)
 
 Выделены таблицы 
 users, films - основные таблицы модели  
 mpa_ratings, genres - дополнительные справочники рейтингов и жанров для фильмов  
 friends, likes, film_genres - таблицы связи для отношнеий n к m  
   
-Примеры запросов:   
+### Примеры запросов:   
   
 Получение всех фильмов:  
 ```
